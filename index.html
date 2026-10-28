@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f5ef" />
+    <title>Red de Vida | Prototipo</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#inicio" aria-label="Red de Vida, inicio">
+          <span class="brand-mark" aria-hidden="true">+</span>
+          <span>Red de Vida</span>
+        </a>
+        <span class="prototype-label">Prototipo</span>
+      </header>
+
+      <section id="inicio" class="screen hero" aria-labelledby="welcome-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Una guía para comunicar mejor</p>
+          <h2 id="welcome-title">Cuidarnos empieza por comunicar a tiempo</h2>
+          <p class="intro">Comunica una emergencia de forma clara y rápida.</p>
+          <button class="button button-primary" id="start-button" type="button">
+            Iniciar reporte <span aria-hidden="true">→</span>
+          </button>
+          <p class="disclaimer">Este prototipo no contacta a los servicios de emergencia.</p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="heart">♥</div>
+          <span class="spark spark-one">✳</span>
+          <span class="spark spark-two">✳</span>
+          <span class="spark spark-three">✳</span>
+        </div>
+      </section>
+
+      <section id="emergencias" class="screen selection hidden" aria-labelledby="emergency-title">
+        <button class="back-button" id="back-button" type="button">← Volver</button>
+        <p class="eyebrow">Paso 1 de 4</p>
+        <h2 id="emergency-title">¿Qué clase de emergencia esta ocurriendo?</h2>
+        <p class="section-copy">Selecciona la situación que más se parece a lo que estás viendo.</p>
+
+        <div class="emergency-grid" id="emergency-grid">
+          <button class="emergency-card" type="button" data-emergency="No responde el paciente"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg></span><span>No responde el paciente</span></button>
+          <button class="emergency-card" type="button" data-emergency="Le cuesta respirar"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg></span><span>Le cuesta respirar</span></button>
+          <button class="emergency-card" type="button" data-emergency="Sangrado abundante"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></span><span>Sangrado abundante</span></button>
+          <button class="emergency-card" type="button" data-emergency="Accidente de tránsito con heridos"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8"/><path d="M7 14h.01"/><path d="M17 14h.01"/><rect width="18" height="8" x="3" y="10" rx="2"/><path d="M5 18v2"/><path d="M19 18v2"/></svg></span><span>Accidente de tránsito con heridos</span></button>
+          <button class="emergency-card" type="button" data-emergency="Golpe o lesiones"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 10.01h.01"/><path d="M10 14.01h.01"/><path d="M14 10.01h.01"/><path d="M14 14.01h.01"/><path d="M18 6v12"/><path d="M6 6v12"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg></span><span>Golpe o lesiones</span></button>
+          <button class="emergency-card" type="button" data-emergency="Convulsiones"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span><span>Convulsiones</span></button>
+          <button class="emergency-card" type="button" data-emergency="Dolor fuerte en el pecho"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></span><span>Dolor fuerte en el pecho</span></button>
+          <button class="emergency-card" type="button" data-emergency="Quemadura"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg></span><span>Quemadura</span></button>
+          <button class="emergency-card" type="button" data-emergency="Otra emergencia"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span><span>Otra emergencia</span></button>
+        </div>
+        <p class="selection-note" id="selection-note" aria-live="polite">Elige una opción para continuar.</p>
+      </section>
+    </main>
+  </body>
+</html>
