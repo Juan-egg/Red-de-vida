@@ -11,7 +11,9 @@
   <body>
     <main class="app-shell">
       <p class="global-error hidden" id="global-error" role="alert" tabindex="-1"></p>
-<section id="inicio" class="screen hero" aria-labelledby="welcome-title">
+      <a class="screen-call-link hidden" id="screen-call-link" href="tel:123" aria-label="Llamar al 123">Llamar al 123</a>
+
+      <section id="inicio" class="screen hero" aria-labelledby="welcome-title">
         <div class="hero-copy">
           <p class="eyebrow">Una guía para comunicar mejor</p>
           <h2 id="welcome-title">Cuidarnos empieza por comunicar a tiempo</h2>
@@ -32,9 +34,21 @@
         </div>
       </section>
 
+      <section id="identificacion" class="screen form-screen hidden" aria-labelledby="identification-title">
+        <button class="back-button" data-back="inicio" type="button">← Volver</button>
+        <p class="eyebrow">Paso 1 de 5</p>
+        <h2 id="identification-title" tabindex="-1">Datos de quien reporta</h2>
+        <p class="section-copy">Puedes incluir tu número para identificarte ante el operador si te lo solicita. Es opcional y no es necesario para reportar. En esta simulación no se verifica, transmite ni almacena; puedes continuar sin ingresarlo.</p>
+        <form id="identification-form">
+          <label for="reporter-id">Número de identificación <span>(opcional)</span></label>
+          <input id="reporter-id" name="reporterId" type="text" inputmode="numeric" autocomplete="off" maxlength="24" />
+          <button class="button button-primary next-button" type="submit">Continuar <span aria-hidden="true">→</span></button>
+        </form>
+      </section>
+
       <section id="emergencias" class="screen selection hidden" aria-labelledby="emergency-title">
         <button class="back-button" id="back-button" type="button">← Volver</button>
-        <p class="eyebrow">Paso 1 de 4</p>
+        <p class="eyebrow">Paso 2 de 5</p>
         <h2 id="emergency-title" tabindex="-1">¿Qué clase de emergencia está ocurriendo?</h2>
         <p class="section-copy">Selecciona la situación que más se parece a lo que estás viendo.</p>
 
@@ -44,7 +58,7 @@
           <button class="emergency-card" type="button" data-emergency="Sangrado abundante"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/></svg></span><span>Sangrado abundante</span></button>
           <button class="emergency-card" type="button" data-emergency="Accidente de tránsito con heridos"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8"/><path d="M7 14h.01"/><path d="M17 14h.01"/><rect width="18" height="8" x="3" y="10" rx="2"/><path d="M5 18v2"/><path d="M19 18v2"/></svg></span><span>Accidente de tránsito con heridos</span></button>
           <button class="emergency-card" type="button" data-emergency="Golpe o lesiones"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 10.01h.01"/><path d="M10 14.01h.01"/><path d="M14 10.01h.01"/><path d="M14 14.01h.01"/><path d="M18 6v12"/><path d="M6 6v12"/><rect x="2" y="6" width="20" height="12" rx="2"/></svg></span><span>Golpe o lesiones</span></button>
-          <button class="emergency-card" type="button" data-emergency="Convulsiones"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span><span>Convulsiones</span></button>
+          <button class="emergency-card" type="button" data-emergency="Convulsiones"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"/></svg></span><span>Convulsiones o pérdida de conciencia</span></button>
           <button class="emergency-card" type="button" data-emergency="Dolor fuerte en el pecho"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/><path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/></svg></span><span>Dolor fuerte en el pecho</span></button>
           <button class="emergency-card" type="button" data-emergency="Quemadura"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg></span><span>Quemadura</span></button>
           <button class="emergency-card" type="button" data-emergency="Otra emergencia"><span class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span><span>Otra emergencia</span></button>
@@ -55,7 +69,7 @@
 
       <section id="ubicacion" class="screen form-screen hidden" aria-labelledby="location-title">
         <button class="back-button" data-back="emergencias" type="button">← Volver</button>
-        <p class="eyebrow">Paso 2 de 4</p>
+        <p class="eyebrow">Paso 3 de 5</p>
         <h2 id="location-title" tabindex="-1">¿Dónde ocurre la emergencia?</h2>
         <p class="section-copy">Usaremos tu ubicación solo para completar este reporte de demostración. Confirma el punto o escribe una dirección.</p>
         <div class="location-status" id="location-status" role="status" aria-live="polite">Puedes obtener tu ubicación o escribirla manualmente.</div>
@@ -72,24 +86,22 @@
 
       <section id="detalles" class="screen form-screen hidden" aria-labelledby="details-title">
         <button class="back-button" data-back="ubicacion" type="button">← Volver</button>
-        <p class="eyebrow">Paso 3 de 4</p>
+        <p class="eyebrow">Paso 4 de 5</p>
         <h2 id="details-title" tabindex="-1">Cuéntanos un poco más</h2>
         <p class="section-copy" id="details-emergency"></p>
         <form id="details-form">
-          <div id="question-list" class="question-list"></div>
-          <div class="photo-field">
-            <label for="photo">Añadir foto del entorno <span>(opcional)</span></label>
-            <input id="photo" name="photo" type="file" accept="image/*" capture="environment" />
-            <p class="helper-text">No te pongas en peligro ni retrases la solicitud de ayuda para tomar una foto. La imagen solo se conserva en esta sesión.</p>
-            <p class="form-error" id="photo-error" role="alert"></p>
+          <div class="consent-box">
+            <p>Las respuestas siguientes describen la salud de otra persona y son opcionales. Se usarían solo para preparar el resumen de esta simulación y comunicarlo verbalmente al 123. No se envían ni guardan en un servidor.</p>
+            <label class="consent-label" for="health-consent"><input id="health-consent" type="checkbox" /> Autorizo expresamente el uso de estas respuestas con esa finalidad. Puedo continuar sin autorizarlas ni responder.</label>
           </div>
+          <div id="question-list" class="question-list"></div>
           <button class="button button-primary next-button" type="submit">Revisar información <span aria-hidden="true">→</span></button>
         </form>
       </section>
 
       <section id="revision" class="screen form-screen hidden" aria-labelledby="review-title">
         <button class="back-button" data-back="detalles" type="button">← Volver</button>
-        <p class="eyebrow">Paso 4 de 4</p>
+        <p class="eyebrow">Paso 5 de 5</p>
         <h2 id="review-title" tabindex="-1">Revisa la información</h2>
         <p class="section-copy">Puedes volver a cualquier paso para corregir los datos.</p>
         <div id="review-summary" class="review-summary"></div>
@@ -113,4 +125,3 @@
     </main>
   </body>
 </html>
-

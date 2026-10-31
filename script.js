@@ -1,26 +1,28 @@
 // Este archivo controla el flujo del prototipo; no envía datos a servicios externos.
 
-/** @typedef {{ id: string, prompt: string }} Question */
+/** @typedef {{ id: string, prompt: string, options?: string[] }} Question */
 /** @typedef {{ id: string, title: string, questions: Question[], asksPeople: boolean }} EmergencyConfig */
-/** @typedef {{ emergency: string, latitude: number | null, longitude: number | null, accuracy: number | null, address: string, landmark: string, people: string, answers: Record<string, string>, photo: File | null }} ReportState */
+/** @typedef {{ reporterId: string, emergency: string, latitude: number | null, longitude: number | null, accuracy: number | null, address: string, landmark: string, people: string, answers: Record<string, string> }} ReportState */
 
 const emergencyConfigs = /** @type {Record<string, EmergencyConfig>} */ ({
   'No responde el paciente': { id: 'no-responde', title: 'No responde', questions: [{ id: 'responds', prompt: '¿Responde cuando le hablan?' }, { id: 'breathing', prompt: '¿Se observa que respira?' }], asksPeople: false },
-  'Le cuesta respirar': { id: 'respira', title: 'Le cuesta respirar', questions: [{ id: 'responds', prompt: '¿Está consciente y responde?' }, { id: 'breathing', prompt: '¿Se observa que respira?' }], asksPeople: false },
   'Sangrado abundante': { id: 'sangrado', title: 'Sangrado abundante', questions: [{ id: 'bleeding', prompt: '¿Hay sangrado abundante visible?' }], asksPeople: false },
   'Accidente de tránsito con heridos': { id: 'accidente', title: 'Accidente con lesionados', questions: [{ id: 'unresponsive', prompt: '¿Hay personas que no responden?' }, { id: 'breathing', prompt: '¿Hay personas con dificultad para respirar?' }, { id: 'bleeding', prompt: '¿Hay personas con sangrado abundante?' }], asksPeople: true },
   'Golpe o lesiones': { id: 'lesion', title: 'Golpe o lesión', questions: [{ id: 'responds', prompt: '¿Responde la persona?' }, { id: 'bleeding', prompt: '¿Hay sangrado abundante?' }], asksPeople: true },
-  'Convulsiones': { id: 'convulsion', title: 'Convulsiones', questions: [{ id: 'seizing', prompt: '¿Está convulsionando ahora?' }, { id: 'responds', prompt: '¿Responde?' }], asksPeople: false },
-  'Dolor fuerte en el pecho': { id: 'pecho', title: 'Dolor fuerte en el pecho', questions: [{ id: 'responds', prompt: '¿Responde?' }, { id: 'breathing', prompt: '¿Tiene dificultad para respirar?' }], asksPeople: false },
+  'Convulsiones': { id: 'convulsion', title: 'Convulsiones o pérdida de conciencia', questions: [{ id: 'seizing', prompt: '¿Qué observas ahora?', options: ['Tiene movimientos involuntarios', 'Los movimientos ya pararon', 'No observé movimientos', 'No sé'] }, { id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde cuando le hablan', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'episodeDuration', prompt: '¿Cuánto duró el episodio, aproximadamente?', options: ['Menos de 5 minutos', '5 minutos o más', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Parece respirar con normalidad', 'Tiene dificultad para respirar', 'No observo respiración normal', 'No sé'] }], asksPeople: false },
+  'Dolor fuerte en el pecho': { id: 'pecho', title: 'Dolor fuerte en el pecho', questions: [{ id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde con normalidad', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Parece respirar con normalidad', 'Tiene dificultad para respirar', 'No observo respiración normal', 'No sé'] }, { id: 'chestPain', prompt: '¿Qué describe o señala la persona?', options: ['Dolor u opresión en el pecho', 'Molestia que se extiende a brazo, espalda, cuello o mandíbula', 'No puede responder; lo observo sin asumir dolor', 'No sé'] }, { id: 'onset', prompt: '¿Cuándo comenzó, según la persona o lo que observaste?', options: ['Hace menos de 10 minutos', 'Hace 10 minutos o más', 'No sé'] }], asksPeople: false },
+  'Le cuesta respirar': { id: 'respira', title: 'Dificultad para respirar', questions: [{ id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde con normalidad', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Respira con dificultad', 'Respira muy rápido o con pausas', 'No observo respiración normal', 'No sé'] }, { id: 'speaking', prompt: '¿Puede hablar en frases completas?', options: ['Sí', 'Solo puede decir pocas palabras', 'No puede hablar', 'No sé'] }, { id: 'onset', prompt: '¿Cuándo comenzó la dificultad?', options: ['De repente', 'Poco a poco', 'No sé'] }], asksPeople: false },
   Quemadura: { id: 'quemadura', title: 'Quemadura', questions: [{ id: 'responds', prompt: '¿Responde la persona?' }], asksPeople: true },
   'Otra emergencia': { id: 'otra', title: 'Otra emergencia', questions: [{ id: 'responds', prompt: '¿Responde la persona?' }, { id: 'breathing', prompt: '¿Hay dificultad para respirar?' }, { id: 'bleeding', prompt: '¿Hay sangrado abundante?' }], asksPeople: false },
 });
 
 /** @type {ReportState} */
-const report = { emergency: '', latitude: null, longitude: null, accuracy: null, address: '', landmark: '', people: '', answers: {}, photo: null };
-const screenIds = ['inicio', 'emergencias', 'ubicacion', 'detalles', 'revision', 'resultado'];
+const report = { reporterId: '', emergency: '', latitude: null, longitude: null, accuracy: null, address: '', landmark: '', people: '', answers: {} };
+const screenIds = ['inicio', 'identificacion', 'emergencias', 'ubicacion', 'detalles', 'revision', 'resultado'];
 const screens = new Map(screenIds.map((id) => [id, document.getElementById(id)]));
 const startButton = document.getElementById('start-button');
+const identificationForm = document.getElementById('identification-form');
+const reporterIdInput = document.getElementById('reporter-id');
 const emergencyGrid = document.getElementById('emergency-grid');
 const selectionNote = document.getElementById('selection-note');
 const continueEmergencyButton = document.getElementById('to-location');
@@ -33,10 +35,10 @@ const locateButton = document.getElementById('locate-button');
 const detailsForm = document.getElementById('details-form');
 const questionList = document.getElementById('question-list');
 const detailsEmergency = document.getElementById('details-emergency');
-const photoInput = document.getElementById('photo');
-const photoError = document.getElementById('photo-error');
+const healthConsent = document.getElementById('health-consent');
 const reviewSummary = document.getElementById('review-summary');
 const resultSummary = document.getElementById('result-summary');
+const screenCallLink = document.getElementById('screen-call-link');
 let locationRequestId = 0;
 
 /** @param {string} id */
@@ -57,6 +59,7 @@ function showScreen(id) {
     locationRequestId += 1;
     if (locateButton) locateButton.disabled = false;
   }
+  screenCallLink?.classList.toggle('hidden', id === 'inicio' || id === 'resultado');
   screens.forEach((screen, screenId) => screen?.classList.toggle('hidden', screenId !== id));
   const heading = target.querySelector('h2');
   if (heading) heading.focus({ preventScroll: true });
@@ -121,27 +124,29 @@ function renderQuestions() {
     input.min = '1';
     input.max = '999';
     input.step = '1';
-    input.required = true;
+    input.required = false;
+    input.disabled = !healthConsent.checked;
     input.inputMode = 'numeric';
     input.value = report.people;
     group.append(label, input);
     questionList.append(group);
   }
-  config.questions.forEach(({ id, prompt }) => {
+  config.questions.forEach(({ id, prompt, options }) => {
     const group = document.createElement('fieldset');
     group.className = 'question-item';
     const legend = document.createElement('legend');
     legend.textContent = prompt;
     const select = document.createElement('select');
     select.name = id;
-    select.required = true;
+    select.required = false;
+    select.disabled = !healthConsent.checked;
     const placeholder = document.createElement('option');
     placeholder.value = '';
     placeholder.textContent = 'Selecciona una respuesta';
     placeholder.disabled = true;
     placeholder.selected = !report.answers[id];
     select.append(placeholder);
-    ['Sí', 'No', 'No sé'].forEach((answer) => {
+    [...(options || ['Sí', 'No', 'No sé']), 'Prefiero no responder'].forEach((answer) => {
       const option = document.createElement('option');
       option.value = answer;
       option.textContent = answer;
@@ -164,12 +169,26 @@ function renderSummary(container) {
   config.questions.forEach(({ id, prompt }) => {
     if (report.answers[id]) container.append(summaryRow(prompt, report.answers[id]));
   });
-  container.append(summaryRow('Fotografía', report.photo ? 'Adjunta en esta sesión' : 'No se adjuntó'));
+  if (report.reporterId) container.append(summaryRow('Identificación opcional de quien reporta', report.reporterId));
 }
 
 startButton?.addEventListener('click', () => {
   clearError();
+  showScreen('identificacion');
+});
+
+identificationForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  report.reporterId = reporterIdInput.value.trim();
   showScreen('emergencias');
+});
+
+healthConsent?.addEventListener('change', () => {
+  questionList.querySelectorAll('select, input').forEach((control) => {
+    control.disabled = !healthConsent.checked;
+    if (!healthConsent.checked) control.value = '';
+  });
+  if (!healthConsent.checked) report.answers = {};
 });
 
 document.getElementById('back-button')?.addEventListener('click', () => {
@@ -302,8 +321,8 @@ detailsForm?.addEventListener('submit', (event) => {
     return;
   }
   const count = questionList.querySelector('#people-count');
-  if (config.asksPeople) {
-    const number = Number(count?.value);
+  if (config.asksPeople && healthConsent.checked && count?.value) {
+    const number = Number(count.value);
     if (!Number.isInteger(number) || number < 1 || number > 999) {
       count?.setCustomValidity('Ingresa un número entero entre 1 y 999.');
       count?.reportValidity();
@@ -316,23 +335,13 @@ detailsForm?.addEventListener('submit', (event) => {
   }
   /** @type {Record<string, string>} */
   const answers = {};
-  for (const question of config.questions) {
-    const select = detailsForm.elements.namedItem(question.id);
-    if (!(select instanceof HTMLSelectElement) || !select.value) {
-      if (select instanceof HTMLSelectElement) select.focus();
-      return;
+  if (healthConsent.checked) {
+    for (const question of config.questions) {
+      const select = detailsForm.elements.namedItem(question.id);
+      if (select instanceof HTMLSelectElement && select.value) answers[question.id] = select.value;
     }
-    answers[question.id] = select.value;
   }
   report.answers = answers;
-  const file = photoInput.files?.[0] || null;
-  if (file && (!file.type.startsWith('image/') || file.size > 8 * 1024 * 1024)) {
-    photoError.textContent = 'Elige una imagen de hasta 8 MB o continúa sin fotografía.';
-    photoInput.focus();
-    return;
-  }
-  report.photo = file;
-  photoError.textContent = '';
   try {
     renderSummary(reviewSummary);
     showScreen('revision');
@@ -363,7 +372,7 @@ requiredElement('complete-button').addEventListener('click', () => {
 });
 
 requiredElement('restart-button').addEventListener('click', () => {
-  Object.assign(report, { emergency: '', latitude: null, longitude: null, accuracy: null, address: '', landmark: '', people: '', answers: {}, photo: null });
+  Object.assign(report, { reporterId: '', emergency: '', latitude: null, longitude: null, accuracy: null, address: '', landmark: '', people: '', answers: {} });
   emergencyGrid?.querySelectorAll('.emergency-card').forEach((card) => {
     card.classList.remove('selected');
     card.setAttribute('aria-pressed', 'false');
@@ -372,7 +381,8 @@ requiredElement('restart-button').addEventListener('click', () => {
   selectionNote.textContent = 'Elige una opción para continuar.';
   locationForm.reset();
   detailsForm.reset();
+  identificationForm.reset();
+  questionList.replaceChildren();
   clearError();
   showScreen('inicio');
 });
-
