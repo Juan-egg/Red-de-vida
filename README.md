@@ -11,6 +11,7 @@ Red de Vida es un prototipo web adaptable a móviles que ayuda a organizar la in
 - Permite elegir una sola emergencia principal y cambiarla antes de continuar.
 - Intenta obtener la ubicación del dispositivo y permite escribir una dirección si no está disponible.
 - Adapta las preguntas a la emergencia elegida y ofrece respuestas «Sí», «No» y «No sé».
+- Explica bajo cada pregunta que «No sé» significa que el testigo no pudo observar o confirmar la respuesta; recomienda no adivinar.
 - No solicita fotografías.
 - Presenta las preguntas sobre salud como opcionales y solicita autorización expresa antes de responderlas en esta simulación.
 - Conserva los datos mientras el formulario permanece abierto y permite volver a corregirlos.

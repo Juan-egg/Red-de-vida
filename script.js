@@ -5,15 +5,15 @@
 /** @typedef {{ reporterId: string, emergency: string, latitude: number | null, longitude: number | null, accuracy: number | null, address: string, landmark: string, people: string, answers: Record<string, string> }} ReportState */
 
 const emergencyConfigs = /** @type {Record<string, EmergencyConfig>} */ ({
-  'No responde el paciente': { id: 'no-responde', title: 'No responde', questions: [{ id: 'responds', prompt: '¿Responde cuando le hablan?' }, { id: 'breathing', prompt: '¿Se observa que respira?' }], asksPeople: false },
-  'Sangrado abundante': { id: 'sangrado', title: 'Sangrado abundante', questions: [{ id: 'bleeding', prompt: '¿Hay sangrado abundante visible?' }], asksPeople: false },
-  'Accidente de tránsito con heridos': { id: 'accidente', title: 'Accidente con lesionados', questions: [{ id: 'unresponsive', prompt: '¿Hay personas que no responden?' }, { id: 'breathing', prompt: '¿Hay personas con dificultad para respirar?' }, { id: 'bleeding', prompt: '¿Hay personas con sangrado abundante?' }], asksPeople: true },
-  'Golpe o lesiones': { id: 'lesion', title: 'Golpe o lesión', questions: [{ id: 'responds', prompt: '¿Responde la persona?' }, { id: 'bleeding', prompt: '¿Hay sangrado abundante?' }], asksPeople: true },
-  'Convulsiones': { id: 'convulsion', title: 'Convulsiones o pérdida de conciencia', questions: [{ id: 'seizing', prompt: '¿Qué observas ahora?', options: ['Tiene movimientos involuntarios', 'Los movimientos ya pararon', 'No observé movimientos', 'No sé'] }, { id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde cuando le hablan', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'episodeDuration', prompt: '¿Cuánto duró el episodio, aproximadamente?', options: ['Menos de 5 minutos', '5 minutos o más', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Parece respirar con normalidad', 'Tiene dificultad para respirar', 'No observo respiración normal', 'No sé'] }], asksPeople: false },
+  'No responde el paciente': { id: 'no-responde', title: 'No responde', questions: [{ id: 'responds', prompt: '¿Qué ocurre cuando le hablas?', options: ['Responde claramente', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas en su respiración?', options: ['Parece respirar con normalidad', 'Le cuesta respirar', 'No observo respiración normal', 'No sé'] }], asksPeople: false },
+  'Sangrado abundante': { id: 'sangrado', title: 'Sangrado abundante', questions: [{ id: 'bleeding', prompt: '¿Qué observas?', options: ['Sangrado abundante visible', 'Hay sangrado, pero no parece abundante', 'No veo sangrado', 'No sé'] }, { id: 'location', prompt: '¿En qué zona observas el sangrado?', options: ['Cabeza o cuello', 'Torso', 'Brazo o mano', 'Pierna o pie', 'Varias zonas', 'No sé'] }], asksPeople: false },
+  'Accidente de tránsito con heridos': { id: 'accidente', title: 'Accidente con lesionados', questions: [{ id: 'unresponsive', prompt: '¿Hay personas que no responden cuando les hablas?', options: ['Sí', 'No', 'No sé'] }, { id: 'breathing', prompt: '¿Hay personas a quienes les cueste respirar?', options: ['Sí', 'No', 'No sé'] }, { id: 'bleeding', prompt: '¿Hay sangrado abundante visible?', options: ['Sí', 'No', 'No sé'] }], asksPeople: true },
+  'Golpe o lesiones': { id: 'lesion', title: 'Golpe o lesión', questions: [{ id: 'responds', prompt: '¿Qué ocurre cuando le hablas?', options: ['Responde claramente', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'bleeding', prompt: '¿Qué observas sobre el sangrado?', options: ['Sangrado abundante visible', 'Hay sangrado, pero no parece abundante', 'No veo sangrado', 'No sé'] }, { id: 'injuryArea', prompt: '¿En qué zona parece estar la lesión?', options: ['Cabeza o cuello', 'Torso', 'Brazo o mano', 'Pierna o pie', 'Varias zonas', 'No sé'] }], asksPeople: true },
+  'Convulsiones': { id: 'convulsion', title: 'Convulsiones', questions: [{ id: 'seizing', prompt: '¿Qué observas ahora?', options: ['Tiene movimientos involuntarios', 'Los movimientos ya pararon', 'No observé movimientos', 'No sé'] }, { id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde cuando le hablan', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'episodeDuration', prompt: '¿Cuánto duró el episodio, aproximadamente?', options: ['Menos de 5 minutos', '5 minutos o más', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Parece respirar con normalidad', 'Tiene dificultad para respirar', 'No observo respiración normal', 'No sé'] }], asksPeople: false },
   'Dolor fuerte en el pecho': { id: 'pecho', title: 'Dolor fuerte en el pecho', questions: [{ id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde con normalidad', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Parece respirar con normalidad', 'Tiene dificultad para respirar', 'No observo respiración normal', 'No sé'] }, { id: 'chestPain', prompt: '¿Qué describe o señala la persona?', options: ['Dolor u opresión en el pecho', 'Molestia que se extiende a brazo, espalda, cuello o mandíbula', 'No puede responder; lo observo sin asumir dolor', 'No sé'] }, { id: 'onset', prompt: '¿Cuándo comenzó, según la persona o lo que observaste?', options: ['Hace menos de 10 minutos', 'Hace 10 minutos o más', 'No sé'] }], asksPeople: false },
-  'Le cuesta respirar': { id: 'respira', title: 'Dificultad para respirar', questions: [{ id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde con normalidad', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Respira con dificultad', 'Respira muy rápido o con pausas', 'No observo respiración normal', 'No sé'] }, { id: 'speaking', prompt: '¿Puede hablar en frases completas?', options: ['Sí', 'Solo puede decir pocas palabras', 'No puede hablar', 'No sé'] }, { id: 'onset', prompt: '¿Cuándo comenzó la dificultad?', options: ['De repente', 'Poco a poco', 'No sé'] }], asksPeople: false },
-  Quemadura: { id: 'quemadura', title: 'Quemadura', questions: [{ id: 'responds', prompt: '¿Responde la persona?' }], asksPeople: true },
-  'Otra emergencia': { id: 'otra', title: 'Otra emergencia', questions: [{ id: 'responds', prompt: '¿Responde la persona?' }, { id: 'breathing', prompt: '¿Hay dificultad para respirar?' }, { id: 'bleeding', prompt: '¿Hay sangrado abundante?' }], asksPeople: false },
+  'Le cuesta respirar': { id: 'respira', title: 'Le cuesta respirar', questions: [{ id: 'consciousness', prompt: '¿Cómo responde la persona?', options: ['Responde con normalidad', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas sobre su respiración?', options: ['Respira con dificultad', 'Respira muy rápido o con pausas', 'No observo respiración normal', 'No sé'] }, { id: 'speaking', prompt: '¿Puede hablar en frases completas?', options: ['Sí', 'Solo puede decir pocas palabras', 'No puede hablar', 'No sé'] }, { id: 'onset', prompt: '¿Cuándo comenzó la dificultad?', options: ['De repente', 'Poco a poco', 'No sé'] }], asksPeople: false },
+  Quemadura: { id: 'quemadura', title: 'Quemadura', questions: [{ id: 'responds', prompt: '¿Qué ocurre cuando le hablas?', options: ['Responde claramente', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'burnArea', prompt: '¿Qué zona parece afectada?', options: ['Cara o cuello', 'Torso', 'Brazo o mano', 'Pierna o pie', 'Varias zonas', 'No sé'] }], asksPeople: true },
+  'Otra emergencia': { id: 'otra', title: 'Otra emergencia', questions: [{ id: 'eventType', prompt: '¿Qué situación observas?', options: ['Caída o golpe', 'Incendio o quemadura', 'Accidente de tránsito', 'Otra situación', 'No sé'] }, { id: 'responds', prompt: '¿Qué ocurre cuando le hablas?', options: ['Responde claramente', 'Responde con dificultad', 'No responde', 'No sé'] }, { id: 'breathing', prompt: '¿Qué observas en su respiración?', options: ['Parece respirar con normalidad', 'Le cuesta respirar', 'No observo respiración normal', 'No sé'] }, { id: 'bleeding', prompt: '¿Qué observas sobre el sangrado?', options: ['Sangrado abundante visible', 'Hay sangrado, pero no parece abundante', 'No veo sangrado', 'No sé'] }], asksPeople: false },
 });
 
 /** @type {ReportState} */
@@ -34,7 +34,6 @@ const locationError = document.getElementById('location-error');
 const locateButton = document.getElementById('locate-button');
 const detailsForm = document.getElementById('details-form');
 const questionList = document.getElementById('question-list');
-const detailsEmergency = document.getElementById('details-emergency');
 const healthConsent = document.getElementById('health-consent');
 const reviewSummary = document.getElementById('review-summary');
 const resultSummary = document.getElementById('result-summary');
@@ -109,7 +108,6 @@ function renderQuestions() {
     showScreen('emergencias');
     return;
   }
-  detailsEmergency.textContent = `Situación seleccionada: ${config.title}. Responde según lo que puedas observar; puedes elegir “No sé”.`;
   questionList.replaceChildren();
   if (config.asksPeople) {
     const group = document.createElement('div');
@@ -127,8 +125,27 @@ function renderQuestions() {
     input.required = false;
     input.disabled = !healthConsent.checked;
     input.inputMode = 'numeric';
-    input.value = report.people;
+    input.value = report.people === 'No sé' ? '' : report.people;
+    input.setAttribute('aria-describedby', 'people-count-help');
     group.append(label, input);
+    const unknownLabel = document.createElement('label');
+    unknownLabel.className = 'unknown-answer-label';
+    const unknown = document.createElement('input');
+    unknown.id = 'people-count-unknown';
+    unknown.type = 'checkbox';
+    unknown.checked = report.people === 'No sé';
+    unknown.disabled = !healthConsent.checked;
+    unknownLabel.append(unknown, document.createTextNode(' No sé'));
+    group.append(unknownLabel);
+    unknown.addEventListener('change', () => {
+      input.disabled = !healthConsent.checked || unknown.checked;
+      if (unknown.checked) input.value = '';
+    });
+    const help = document.createElement('small');
+    help.id = 'people-count-help';
+    help.className = 'question-help';
+    help.textContent = '“No sé” significa que no lograste contar a las personas. Marca esa opción si tienes dudas; no adivines.';
+    group.append(help);
     questionList.append(group);
   }
   config.questions.forEach(({ id, prompt, options }) => {
@@ -140,6 +157,7 @@ function renderQuestions() {
     select.name = id;
     select.required = false;
     select.disabled = !healthConsent.checked;
+    select.setAttribute('aria-describedby', `${id}-help`);
     const placeholder = document.createElement('option');
     placeholder.value = '';
     placeholder.textContent = 'Selecciona una respuesta';
@@ -153,7 +171,11 @@ function renderQuestions() {
       option.selected = report.answers[id] === answer;
       select.append(option);
     });
-    group.append(legend, select);
+    const help = document.createElement('small');
+    help.id = `${id}-help`;
+    help.className = 'question-help';
+    help.textContent = '“No sé” significa que no pudiste observarlo o confirmarlo. Elige esa opción si tienes dudas; no adivines.';
+    group.append(legend, select, help);
     questionList.append(group);
   });
 }
@@ -330,6 +352,8 @@ detailsForm?.addEventListener('submit', (event) => {
       return;
     }
     report.people = String(number);
+  } else if (config.asksPeople && healthConsent.checked && questionList.querySelector('#people-count-unknown')?.checked) {
+    report.people = 'No sé';
   } else {
     report.people = '';
   }
