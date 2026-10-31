@@ -16,6 +16,7 @@ Red de Vida es un prototipo web adaptable a móviles que ayuda a organizar la in
 - Presenta las preguntas sobre salud como opcionales y solicita autorización expresa antes de responderlas en esta simulación.
 - Conserva los datos mientras el formulario permanece abierto y permite volver a corregirlos.
 - Muestra un resumen para que la persona pueda comunicar la situación por teléfono.
+- Permite descargar una copia CSV del reporte para abrirla con Excel; el archivo se guarda en el dispositivo y no se envía a un servidor.
 - Usa HTML, CSS y JavaScript sin dependencias de instalación ni proceso de compilación.
 
 ## Cómo abrirlo
@@ -45,7 +46,7 @@ La ubicación del navegador puede requerir un contexto seguro. `localhost` se co
 ## Límites actuales
 
 - No existe una conexión con NUSE/123 ni un servidor para recibir reportes.
-- Los datos viven solo en la memoria de la página y se pierden al recargarla o cerrarla.
+- Los datos viven solo en la memoria de la página y se pierden al recargarla o cerrarla; la descarga CSV crea únicamente una copia local del reporte.
 - No hay modo sin conexión configurado. Para abrir la app sin internet habría que añadir una caché local y cargarla al menos una vez con conexión.
 - La ubicación depende de los permisos del dispositivo y puede ser aproximada; también se puede ingresar una ubicación manual.
 - Las preguntas son contenido de prototipo, no un protocolo clínico. Deben ser validadas por personal médico o de emergencias antes de cualquier uso real.

@@ -38,6 +38,8 @@ const healthConsent = document.getElementById('health-consent');
 const reviewSummary = document.getElementById('review-summary');
 const resultSummary = document.getElementById('result-summary');
 const screenCallLink = document.getElementById('screen-call-link');
+const downloadReportButton = document.getElementById('download-report');
+const exportStatus = document.getElementById('export-status');
 let locationRequestId = 0;
 
 /** @param {string} id */
@@ -320,19 +322,30 @@ locateButton?.addEventListener('click', requestLocation);
 locationForm?.addEventListener('submit', (event) => {
   event.preventDefault();
   clearError();
-  const address = addressInput.value.trim();
-  if (!address && report.latitude === null) {
-    locationError.textContent = 'Escribe una dirección o vuelve a intentar obtener tu ubicación.';
-    addressInput.focus();
-    return;
+  try {
+    const address = addressInput.value.trim();
+    const hasCoordinates = Number.isFinite(report.latitude) && Number.isFinite(report.longitude);
+    if (!address && !hasCoordinates) {
+      locationError.textContent = 'Escribe una dirección o vuelve a intentar obtener tu ubicación.';
+      addressInput.focus();
+      return;
+    }
+    if (!emergencyConfigs[report.emergency]) {
+      locationError.textContent = 'Selecciona una emergencia antes de continuar.';
+      showScreen('emergencias');
+      return;
+    }
+    report.address = address;
+    report.landmark = landmarkInput.value.trim();
+    locationError.textContent = '';
+    renderQuestions();
+    showScreen('detalles');
+  } catch (error) {
+    locationError.textContent = error instanceof Error
+      ? `No se pudo continuar: ${error.message}`
+      : 'No se pudo continuar. Revisa la información e inténtalo de nuevo.';
   }
-  report.address = address;
-  report.landmark = landmarkInput.value.trim();
-  locationError.textContent = '';
-  renderQuestions();
-  showScreen('detalles');
 });
-
 detailsForm?.addEventListener('submit', (event) => {
   event.preventDefault();
   clearError();
@@ -395,6 +408,30 @@ requiredElement('complete-button').addEventListener('click', () => {
   }
 });
 
+
+downloadReportButton?.addEventListener('click', () => {
+  try {
+    const config = emergencyConfigs[report.emergency];
+    if (!config) throw new Error('No hay un reporte disponible para descargar.');
+    const columns = ['Fecha de descarga', 'Emergencia', 'Dirección', 'Punto de referencia', 'Latitud', 'Longitud', 'Precisión (m)', 'Personas afectadas', 'Identificación de quien reporta', ...config.questions.map(({ prompt }) => prompt)];
+    const values = [new Date().toLocaleString('es-CO'), config.title, report.address || (report.latitude !== null ? 'Ubicación del dispositivo' : ''), report.landmark, report.latitude ?? '', report.longitude ?? '', report.accuracy ?? '', report.people, report.reporterId, ...config.questions.map(({ id }) => report.answers[id] || 'Sin respuesta')];
+    const escapeCsv = (value) => `"${String(value).replaceAll('"', '""')}"`;
+    const csv = '\uFEFF' + [columns, values].map((row) => row.map(escapeCsv).join(';')).join('\r\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const timestamp = new Date().toISOString().replaceAll(':', '-').replaceAll('.', '-');
+    link.download = `reporte-red-de-vida-${timestamp}.csv`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    if (exportStatus) exportStatus.textContent = 'Reporte descargado. Puedes abrir el archivo CSV con Excel.';
+  } catch (error) {
+    if (exportStatus) exportStatus.textContent = error instanceof Error ? error.message : 'No se pudo descargar el reporte.';
+  }
+});
 requiredElement('restart-button').addEventListener('click', () => {
   Object.assign(report, { reporterId: '', emergency: '', latitude: null, longitude: null, accuracy: null, address: '', landmark: '', people: '', answers: {} });
   emergencyGrid?.querySelectorAll('.emergency-card').forEach((card) => {
